@@ -1,14 +1,18 @@
-"""
-TODO
-"""
-
 from ciphers import caesar
 import re
 
 
 def import_dict(filename):
-    """
-    TODO
+    """imports a mapping of characters in the specified  filename
+
+    Args:
+        filename (str): name of file containing mapping of letters:
+                        A\tZ
+                        B\tY
+                        C\tX
+
+    Returns:
+        {char -> char}: mappings to swap characters
     """
     mappings = {}
     fd = open(filename, "r")
@@ -33,7 +37,18 @@ def import_dict(filename):
 
 
 def export_dict(mapping, filename):
-    """TODO
+    """Export mapping of swap characters to a file
+
+    Args:
+        mapping ({char -> char}): mapping of swapped characters like:
+                                  A\tZ
+                                  B\tY
+                                  C\tX
+
+        filename (str): file to save mapping in
+
+    Returns:
+        File: file object containing mappings
     """
     f = open(filename, "w")
 
@@ -57,7 +72,20 @@ def export_dict(mapping, filename):
 
 
 def substitute(text, mapping, case_sensitive=False):
-    """TODO
+    """Swap characters in text as specified in the mapping
+
+    Args:
+        text (str): initial un-substituted text 
+        mapping ({char -> char}): mapping of swapped characters like:
+                                  A\tZ
+                                  B\tY
+                                  C\tX
+
+        case_sensitive (bool, optional): set text to upper if false
+                                         defaults to false
+
+    Returns:
+        str: text after letter substitutions have been made
     """
     if not case_sensitive:
         text = text.upper()
@@ -75,8 +103,11 @@ def substitute(text, mapping, case_sensitive=False):
 
 
 def crack(text):
-    """
-    TODO 
+    """predect letter mappings using frequency analysis
+       FIXME delete prints, return string
+
+    Args:
+        text (str): encrypted text
     """
     freqs = caesar.freq(text)
     eng_freqs = caesar.english_letter_frequency()
@@ -107,10 +138,6 @@ def crack(text):
 
 
 def main_loop():
-    """TODO
-    """
-    # FIXME this sucks ass
-
     orig_text = ""
     curr_text = orig_text
     mappings = {}

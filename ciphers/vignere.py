@@ -1,12 +1,18 @@
-"""
-TODO
-"""
-
 from ciphers import caesar
 
 
-def enc(text, key):
-    """TODO
+def encrypt(text, key):
+    """encrypt the text using the Vignere cipher
+
+    Args:
+        text (str): text to encrypt
+        key (str): keyword to use for polyalphabetic shifting
+
+    Raises:
+        ValueError: TODO
+
+    Returns:
+        str: ciphertext
     """
     if not key.isalpha():
         raise ValueError("Key must contain letters only")
@@ -29,8 +35,18 @@ def enc(text, key):
     return cipher
 
 
-def dec(text, key):
-    """TODO
+def decrypt(text, key):
+    """decrypt the text using the Vignere cipher
+
+    Args:
+        text (str): text to decrypt
+        key (str): keyword to use for polyalphabetic shifting
+
+    Raises:
+        ValueError: TODO
+
+    Returns:
+        str: plaintext
     """
     if not key.isalpha():
         raise ValueError("Key must contain letters only")
@@ -51,33 +67,3 @@ def dec(text, key):
 
     return cipher
 
-
-def crack(text, key_length):
-    """FIXME
-    """
-    split_texts = []
-    
-    for _ in range(key_length):
-        split_texts.append("")
-
-    idx = 0
-    for letter in text:
-        split_texts[idx] += letter
-        idx = (idx + 1) % key_length
-
-    split_plain = []
-
-    for subtext in split_texts:
-        shift_keys = caesar.eval_ciphertext(subtext)
-        split_plain.append(caesar.shift(subtext, shift_keys[0]))
-
-    plaintext = ""
-
-    for j in range(len(split_plain[0])):
-        for i in range(key_length):
-            try:
-                plaintext += split_plain[i][j]
-            except IndexError:
-                pass
-
-    return plaintext

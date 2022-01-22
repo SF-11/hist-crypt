@@ -1,24 +1,19 @@
-"""
-TODO
-filename: caesar.py
-
-decrypts and encrypts texts using a Caesar shift cipher
-
-TODO extract util functionality (shift)
-"""
-import re  # regex pattern matching user input
+import re
 import argparse
 
 
 def eval_ciphertext(ciphertext):
-    """
-    This is the primary function for the general evaluation of a ciphertext. This includes:
-     - finding the frequency of each letter in the ciphertext
-     - finding recommended shift keys
-     - printing the ciphertext after shifting it with the most recommended key
-     - printing other recommendations if the best key was wrong
+    """Primary function for the general evaluation of a ciphertext. This includes:
+        - finding the frequency of each letter in the ciphertext
+        - finding recommended shift keys
+        - printing the ciphertext after shifting it with the most recommended key
+        - printing other recommendations if the best key was wrong
 
-    :param ciphertext: the encoded string
+    Args:
+        ciphertext (str): encrypted text to crack
+
+    Returns:
+        (int, int, int): (1st_choice_key, 2nd_choice_key, 3rd_choice_key)
     """
     ciphertext = ciphertext.upper()
     text_freq = freq(ciphertext)
@@ -26,12 +21,15 @@ def eval_ciphertext(ciphertext):
 
 
 def freq(ciphertext):
-    """
-    Iterates through a ciphertext and totals the occurrences of each letter
+    """Iterates through a ciphertext and total the occurances of each letter
 
-    :param ciphertext: the encoded string
-    :return: a dictionary mapping English letters to their frequency in the given text
-    """
+    Args:
+        ciphertext (str): encrypted text to crack
+
+    Returns:
+        {char -> float}: each different char in the ciphertext and the
+                         percentage of the text they take up
+    """ 
     freq_dict = empty_freq_dict()
     total = 0
 
@@ -50,16 +48,15 @@ def freq(ciphertext):
 
 
 def get_shift_keys(ciphertext, text_freq):
-    """
-    FIXME if the text has fewer than three different characters it can cause problems
+    """Use frequency analysis to determine the top 3 most likely keys used to
 
-    For each letter in the ciphertext, its 'closest letter' is found.  The difference between the closest
-    letter and the original represents a shift key. Occurrences of shift keys are totaled, at the top 3
-    are returned.
+    Args:
+        ciphertext (str): encrypted text to crack
+        text_freq ({char -> float}): each different char in the ciphertext
+                                     and the percentage of the text they take up
 
-    :param ciphertext: the encoded string
-    :param text_freq: a dictionary mapping the frequency of each letter in the text
-    :return: a 3-tuple of ints containing the top 3 options for shift keys
+    Returns:
+        (int, int, int): (1st_choice_key, 2nd_choice_key, 3rd_choice_key)
     """
     # find out the most common shift using letter frequency
     shift_freq = {}
@@ -81,12 +78,18 @@ def get_shift_keys(ciphertext, text_freq):
 
 
 def shift(ciphertext, shift_key):
-    """
-    Performs a rot shift on a text
+    """Shifts the characters in ciphertext by shift_key spaces
+       ex. "ABC" shifted by 2 -> "CDE" 
 
-    :param ciphertext: the encoded string
-    :param shift_key: the amount you want to shift by
-    :return: a string representing the ciphertext after it has been shifted
+    Args:
+        ciphertext (str): string to shift
+        shift_key (int): amount the shift the string by
+
+    Raises:
+        ValueError: TODO
+
+    Returns:
+        str : shifted text
     """
     if not isinstance(shift_key, int):
         raise ValueError()
@@ -107,12 +110,15 @@ def shift(ciphertext, shift_key):
 
 
 def closest_letter(freq_percentage):
-    """
-    Finds the 'closest letter' by comparing the percentage of use in a given text
-    to the standard English frequency percentages
+    """Find the letter that most closely matches the percentage of use
+       in the standard English letter frequencies
 
-    :param freq_percentage: frequency percentage of a certain letter in a ciphertext
-    :return: the letter that the percentage most closely corresponds to
+    Args:
+        freq_percentage (float): percent of the text represented 
+                                 by a given letter
+
+    Returns:
+        char: letter that most closely matches the freq_percentage
     """
     standard_freq = english_letter_frequency()
 
@@ -124,9 +130,7 @@ def closest_letter(freq_percentage):
 
 
 def empty_freq_dict():
-    """
-    :return: a dictionary mapping English letters to their frequency in a text, initialized to 0
-    """
+    """mapping of English letters to their frequency in a text initialized to 0"""
     return {
         "A": 0,
         "B": 0,
@@ -158,11 +162,7 @@ def empty_freq_dict():
 
 
 def english_letter_frequency():
-    """
-    Figures taken from the Wikipedia article on Letter Frequency
-
-    :return: dictionary mapping English letters to their frequency, given in percentages
-    """
+    """Mapping of English letters to their frequency %, from Wikipedia"""
     return {
         "E": 12.70,
         "T": 9.056,

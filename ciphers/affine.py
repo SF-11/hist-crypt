@@ -1,11 +1,16 @@
-"""
-TODO
-"""
 from utils import num
 
 
 def encrypt(text, a, b):
-    """TODO
+    """use the affine cipher to encrypt each char in the text as (char*a)+b
+
+    Args:
+        text (str): plaintext to encrypt
+        a (int): a, such that (plaintext*a)+b %26 = ciphertext
+        b (int): b, such that (plaintext*a)+b %26 = ciphertext
+
+    Returns:
+        string: ciphertext
     """
     ciphertext = ""
 
@@ -19,7 +24,15 @@ def encrypt(text, a, b):
 
 
 def decrypt(text, a, b):
-    """TODO
+    """use the affine cipher to decrypt each char in the text as (char-b)*a^-1
+
+    Args:
+        text (str): ciphertext to decrypt
+        a (int): a, such that (plaintext*a)+b %26 = ciphertext
+        b (int): b, such that (plaintext*a)+b %26 = ciphertext
+
+    Returns:
+        str: plaintext
     """
     plaintext = ""
     a_1 = num.modular_inverse(a, 26)
