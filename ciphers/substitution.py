@@ -2,8 +2,8 @@ from ciphers import caesar
 import re
 
 
-def import_dict(filename):
-    """imports a mapping of characters in the specified  filename
+def import_dict(file):
+    """imports a mapping of characters in the specified filename
 
     Args:
         filename (str): name of file containing mapping of letters:
@@ -15,10 +15,9 @@ def import_dict(filename):
         {char -> char}: mappings to swap characters
     """
     mappings = {}
-    fd = open(filename, "r")
     line_format = re.compile(r".\t.")
 
-    for line in fd:
+    for line in file:
         if not line_format.match(line):
             # skip invalid line formats
             continue
