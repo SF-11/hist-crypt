@@ -44,5 +44,3 @@ def decrypt(text, a, b):
             plaintext += letter
 
     return plaintext
-
-# TODO input validation

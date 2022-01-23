@@ -191,7 +191,3 @@ def english_letter_frequency():
         "Q": .095,
         "Z": .074
     }
-
-
-if __name__ == "__main__":
-    main()
