@@ -1,5 +1,6 @@
 import click
 import sys
+import re
 
 import ciphers.caesar
 import ciphers.affine
@@ -16,17 +17,17 @@ def cli():
     pass
 
 
-@click.command()
+@cli.command()
 @click.option("-f", "--file",
               help="name of file containing text or stdin if blank",
               type=click.File('r'),
               default=sys.stdin)
-@click.option("-k", "--key", type=click.IntRange(-26, 26))
+@click.option("-k", "--key", type=click.IntRange(-26, 26), required=True)
 def caesar(file, key):    
     click.echo(ciphers.caesar.shift(file.read(), key).strip())
 
 
-@click.command()
+@cli.command()
 @click.option("-f", "--file",
               help="name of file containing text or stdin if blank",
               type=click.File('r'),
@@ -36,12 +37,12 @@ def caesar(file, key):
 @click.option("-d", "--decrypt", default=False, is_flag=True)
 def affine(file, a, b, decrypt):
     if decrypt:
-        print(ciphers.affine.decrypt(file.read(), int(a), int(b)).strip())
+        click.echo(ciphers.affine.decrypt(file.read(), int(a), int(b)).strip())
     else:
-        print(ciphers.affine.encrypt(file.read(), int(a), int(b)).strip())
+        click.echo(ciphers.affine.encrypt(file.read(), int(a), int(b)).strip())
 
 
-@click.command()
+@cli.command()
 @click.option("-f", "--file",
               help="name of file containing text or stdin if blank",
               type=click.File('r'),
@@ -50,13 +51,12 @@ def affine(file, a, b, decrypt):
 @click.option("-d", "--decrypt", default=False, is_flag=True)
 def vignere(file, key, decrypt):
     if decrypt:
-        print(ciphers.vignere.decrypt(file.read(), key).strip())
+        click.echo(ciphers.vignere.decrypt(file.read(), key).strip())
     else:
-        print(ciphers.vignere.encrypt(file.read(), key).strip())
+        click.echo(ciphers.vignere.encrypt(file.read(), key).strip())
 
 
-
-@click.command()
+@cli.command()
 @click.option("-f", "--file",
               help="name of file containing text",
               type=click.File('r'),
@@ -64,13 +64,7 @@ def vignere(file, key, decrypt):
 @click.option("-m", "--mapfile", type=click.File('r'), required=True)
 def substitution(file, mapfile):
     mapping = ciphers.substitution.import_dict(mapfile)
-    print(ciphers.substitution.substitute(file.read(), mapping).strip())
-
-
-cli.add_command(caesar)
-cli.add_command(affine)
-cli.add_command(vignere)
-cli.add_command(substitution)
+    click.echo(ciphers.substitution.substitute(file.read(), mapping).strip())
 
 
 if __name__ == "__main__":

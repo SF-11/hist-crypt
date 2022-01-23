@@ -14,7 +14,7 @@ def encrypt(text, a, b):
     """
     ciphertext = ""
 
-    for letter in text:
+    for letter in text.upper():
         if letter.isalpha():
             ciphertext += chr(((((ord(letter)-65) * a) + b) % 26) + 65)
         else:
@@ -37,7 +37,7 @@ def decrypt(text, a, b):
     plaintext = ""
     a_1 = num.modular_inverse(a, 26)
 
-    for letter in text:
+    for letter in text.upper():
         if letter.isalpha():
             plaintext += chr(((((ord(letter) - 65) - b) * a_1) % 26) + 65)
         else:
