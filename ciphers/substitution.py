@@ -98,7 +98,6 @@ def substitute(text, mapping, case_sensitive=False):
         else:
             new_text += letter
 
-    print(new_text)
     return new_text
 
 
@@ -135,70 +134,3 @@ def crack(text):
             new_text += letter
 
     print(new_text)
-
-
-def main_loop():
-    orig_text = ""
-    curr_text = orig_text
-    mappings = {}
-
-    # set regex patterns for program loop
-    new_pattern = re.compile(r"new\s+\"(.+)\"")
-    import_pattern = re.compile(r"import\s+\"(.+)\"")
-    sub_pattern = re.compile(r"sub\s+\"(.)\"\s+\"(.)\"")
-
-    # main program loop
-    while True:
-        print("ORIGINAL TEXT:")
-        print(orig_text)
-        print()
-
-        print("CURRENT TEXT:")
-        print(curr_text)
-        print()
-
-        cmd = input("> ")
-
-        if cmd.lower() == "q" or cmd.lower() == "quit":
-            break
-
-        elif new_pattern.match(cmd.lower()):
-            match = new_pattern.match(cmd.lower())
-            orig_text = match.group(1)
-            curr_text = orig_text
-
-        elif import_pattern.match(cmd.lower()):
-            match = import_pattern.match(cmd)
-            mappings = import_dict(match.group(1))
-            curr_text = substitute(curr_text, mappings)
-
-        elif sub_pattern.match(cmd.lower()):
-            match = sub_pattern.match(cmd)
-            val1 = match.group(1)
-            val2 = match.group(2)
-
-            if val1 in mappings:
-                mappings.pop(mappings[val1])
-                mappings.pop(val1)
-
-            if val2 in mappings:
-                mappings.pop(mappings[val2])
-                mappings.pop(val2)
-
-            mappings[val1] = val2
-            mappings[val2] = val1
-
-            curr_text = substitute(curr_text.upper(), mappings)
-
-            # FIXME should edit mappings, not working
-
-        else:
-            # TODO
-            print("TODO docs\n")
-
-        print()
-
-
-if __name__ == "__main__":
-    main_loop()
-
