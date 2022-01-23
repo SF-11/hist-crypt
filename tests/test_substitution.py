@@ -139,7 +139,7 @@ def test_read():
         "X": "C",
     }
     
-    assert substitution.import_dict("tests/substitution_dict_1.txt") == expected_dict
+    assert substitution.import_dict(open("tests/substitution_dict_1.txt", 'r')) == expected_dict
 
 
 def test_read_duplicated():
@@ -152,7 +152,7 @@ def test_read_duplicated():
         "X": "C",
     }
     
-    assert substitution.import_dict("tests/substitution_dict_2.txt") == expected_dict
+    assert substitution.import_dict(open("tests/substitution_dict_2.txt", 'r')) == expected_dict
 
 
 def test_read_non_alpha():
@@ -165,7 +165,7 @@ def test_read_non_alpha():
         "*": "%",
     }
     
-    assert substitution.import_dict("tests/substitution_dict_3.txt") == expected_dict
+    assert substitution.import_dict(open("tests/substitution_dict_3.txt", 'r')) == expected_dict
 
 
 def test_read_invald_format():
@@ -176,7 +176,7 @@ def test_read_invald_format():
         "X": "C",
     }
     
-    assert substitution.import_dict("tests/substitution_dict_4.txt") == expected_dict
+    assert substitution.import_dict(open("tests/substitution_dict_4.txt", 'r')) == expected_dict
 
 
 def test_read_spaces():
@@ -185,7 +185,7 @@ def test_read_spaces():
         "A": " "
     }
 
-    assert substitution.import_dict("tests/substitution_dict_5.txt") == expected_dict
+    assert substitution.import_dict(open("tests/substitution_dict_5.txt", 'r')) == expected_dict
 
 
 def test_export():
