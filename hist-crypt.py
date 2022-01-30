@@ -1,11 +1,12 @@
 import click
 import sys
-import re
+from ciphers.adfgvx import decrypt
 
 import ciphers.caesar
 import ciphers.affine
 import ciphers.substitution
 import ciphers.vignere
+import ciphers.adfgvx
 
 
 COPRIME_TO_26 = ['1', '3', '5', '7', '9', '11',
@@ -65,6 +66,24 @@ def vignere(file, key, decrypt):
 def substitution(file, mapfile):
     mapping = ciphers.substitution.import_dict(mapfile)
     click.echo(ciphers.substitution.substitute(file.read(), mapping).strip())
+
+
+@cli.command()
+@click.option("-f", "--file",
+              help="name of file containing text",
+              type=click.File('r'),
+              default=sys.stdin)
+@click.option("-k", "--key", type=click.STRING, required=True)
+@click.option("-a", "--alphafile",
+              help="File containing 5x5 or 6x6 ADFGV(X) subsititution square, comma delimeters",
+              type=click.File('r'), required=True)
+@click.option("-d", "--decrypt", default=False, is_flag=True)
+def adfgvx(file, key, alphafile, decrypt):
+    alpha_square = ciphers.adfgvx.load_alpha_square(alphafile)
+    if decrypt:
+        click.echo(ciphers.adfgvx.decrypt(file.read(), key, alpha_square).strip())
+    else:
+        click.echo(ciphers.adfgvx.encrypt(file.read(), key, alpha_square).strip())
 
 
 if __name__ == "__main__":

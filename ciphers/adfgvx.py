@@ -1,8 +1,7 @@
-
+import re
 
 adfgx = ["A", "D", "F", "G", "X"]
 adfgvx = ["A", "D", "F", "G", "V", "X"]
-
 
 def _find_letter(letter, alphabet_square):
     for i in range(len(alphabet_square)):
@@ -10,14 +9,17 @@ def _find_letter(letter, alphabet_square):
             if letter.upper() == alphabet_square[i][j].upper():
                 return i, j
 
-    return -1, -1
+    raise ValueError("Your alphabet square does not contain letter in plaintext:", letter)
 
 
 def encrypt(text, key, alphabet_square):
+    text = re.sub(r'\W+', '', text)
+    
     # encode text to ADFGVX
     encoded = []
     for letter in text:
         i, j = _find_letter(letter, alphabet_square)
+        
         if len(alphabet_square) == 5:
             encoded += adfgx[i]
             encoded += adfgx[j]
@@ -47,63 +49,57 @@ def encrypt(text, key, alphabet_square):
 
 
 def decrypt(ciphertext, key, alphabet_square):
+    ciphertext = re.sub(r'\W+', '', ciphertext)
+
     sorted_key = "".join(sorted(key))
+    mat = [['']*len(key) for _ in range((len(ciphertext) // len(key)) + 1)]
 
-    # init columns dictionary
-    col_dict = {}
-    for letter in key:
-        col_dict[letter] = []
-
-    # find out how many letters per col
-    letters_per_col = {}
-    for letter in key:
-        letters_per_col[letter] = 0
-    key_idx = 0
-    for _ in ciphertext:
-        letters_per_col[key[key_idx]] += 1
-        key_idx = (key_idx + 1) % len(key)
-
-    # sort letters into columns
-    i = 0
-    sorted_key_idx = 0
-    for letter in ciphertext:
-        col_dict[sorted_key[sorted_key_idx]] += letter
-        i = (i + 1)
-        if i == letters_per_col[sorted_key[sorted_key_idx]]:
-            i = 0
-            sorted_key_idx += 1
-
-    #
-    ordered_text = ""
-    for i in range(len(col_dict[sorted_key[0]])):
-        for j in sorted_key:
-            if len(col_dict[j]) == len(col_dict[sorted_key[0]]):
-                ordered_text += col_dict[j][i]
-
+    # 
+    curr = 0
+    for k in  sorted_key:
+        idx = key.index(k)
+        # TODO clean up
+        if idx >= len(ciphertext) % len(key):
+            for row in mat[:-1]:
+                row[idx] = ciphertext[curr]
+                curr += 1
+        else:
+            for row in mat:
+                row[idx] = ciphertext[curr]
+                curr += 1
+    
+    #        
+    encoded = ""
+    for row in mat:
+        encoded += "".join(row)
+    
     #
     idx_list = []
-    for val in ordered_text:
+    for val in encoded:
         if len(alphabet_square) == 5:
             idx_list += [adfgx.index(val)]
         else:
             idx_list += [adfgvx.index(val)]
-
+    
     #
     plaintext = ""
-    for i in range(0, len(idx_list)-2, 2):
+    for i in range(0, len(idx_list)-1, 2):
         plaintext += alphabet_square[idx_list[i]][idx_list[i+1]]
 
-    return plaintext
+    return plaintext.upper()
 
 
-if __name__ == "__main__":
-    
-    alpha_square = [
-        ['b', 't', 'a', 'l', 'p'],
-        ['d', 'h', 'o', 'z', 'k'],
-        ['q', 'f', 'v', 's', 'n'],
-        ['g', 'ij', 'c', 'u', 'x'],
-        ['m', 'r', 'e', 'w', 'y']
-    ]
-    
+def load_alpha_square(alphafile):
+    alpha_square = []
+    for line in alphafile:
+        split_line = [i.strip() for i in line.split(',')]
+        alpha_square.append(split_line)
+
+    # make sure matrix is square
+    if not all(len(i)==len(alpha_square) for i in alpha_square):
+        raise ValueError("Input file is not 5x5 or 6x6")
+
+    return alpha_square
+
+
     
