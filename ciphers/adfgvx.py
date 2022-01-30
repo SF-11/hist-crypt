@@ -3,7 +3,21 @@ import re
 adfgx = ["A", "D", "F", "G", "X"]
 adfgvx = ["A", "D", "F", "G", "V", "X"]
 
+
 def _find_letter(letter, alphabet_square):
+    """helper function to find the  index of a specified letter in the 
+       alphabet square
+
+    Args:
+        letter (char): letter to search for
+        alphabet_square (list of list of str): adfgvx translation matrix
+
+    Raises:
+        ValueError: raised if letter is not in square
+
+    Returns:
+        (int, int): row, col indexes of the letter in the square
+    """
     for i in range(len(alphabet_square)):
         for j in range(len(alphabet_square)):
             if letter.upper() == alphabet_square[i][j].upper():
@@ -13,6 +27,16 @@ def _find_letter(letter, alphabet_square):
 
 
 def encrypt(text, key, alphabet_square):
+    """encrypt the text using a key 5x5 or 6x6 ADFG(V)X square
+
+    Args:
+        text (str): plaintext to encrypt
+        key (str): key for the column transposition
+        alphabet_square (list of list of str): adfgvx translation matrix
+
+    Returns:
+        str: ciphertext
+    """
     text = re.sub(r'\W+', '', text)
     
     # encode text to ADFGVX
@@ -49,12 +73,22 @@ def encrypt(text, key, alphabet_square):
 
 
 def decrypt(ciphertext, key, alphabet_square):
-    ciphertext = re.sub(r'\W+', '', ciphertext)
+    """decrypt the text using a key and a 5x5 or 6x6 ADFG(V)X square
 
+    Args:
+        ciphertext (str): ciphertext to decrypt
+        key (str): key for the column transposition
+        alphabet_square (list of list of str): adfgvx translation matrix
+
+    Returns:
+        str: plaintext
+    """
+    # filter all non-alpha-numeric characters and initialize
+    ciphertext = re.sub(r'\W+', '', ciphertext)
     sorted_key = "".join(sorted(key))
     mat = [['']*len(key) for _ in range((len(ciphertext) // len(key)) + 1)]
 
-    # 
+    # re-construct the columns
     curr = 0
     for k in  sorted_key:
         idx = key.index(k)
@@ -68,12 +102,12 @@ def decrypt(ciphertext, key, alphabet_square):
                 row[idx] = ciphertext[curr]
                 curr += 1
     
-    #        
+    # build the unscrambled ciphertext string
     encoded = ""
     for row in mat:
         encoded += "".join(row)
     
-    #
+    # re-construct plaintext
     idx_list = []
     for val in encoded:
         if len(alphabet_square) == 5:
@@ -81,7 +115,6 @@ def decrypt(ciphertext, key, alphabet_square):
         else:
             idx_list += [adfgvx.index(val)]
     
-    #
     plaintext = ""
     for i in range(0, len(idx_list)-1, 2):
         plaintext += alphabet_square[idx_list[i]][idx_list[i+1]]
@@ -90,6 +123,17 @@ def decrypt(ciphertext, key, alphabet_square):
 
 
 def load_alpha_square(alphafile):
+    """loads the ADFG(V)X matrix from a file
+
+    Args:
+        alphafile (str): contents of the matrix file
+
+    Raises:
+        ValueError: raised if matrix is not square
+
+    Returns:
+        list of list of str: adfgvx translation matrix
+    """
     alpha_square = []
     for line in alphafile:
         split_line = [i.strip() for i in line.split(',')]
