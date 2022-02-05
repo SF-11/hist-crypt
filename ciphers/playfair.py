@@ -1,4 +1,4 @@
-
+from re import sub
 
 def encrypt(text, key):
     """use the Playfair cipher to encrypt the text
@@ -10,8 +10,7 @@ def encrypt(text, key):
     Returns:
         str: ciphertext
     """
-    if not text.isalpha():
-        raise ValueError # TODO
+    text = sub(r'\W+', '', text)
 
     text = text.upper().replace("J", "I")
     key_grid = build_grid(key)
@@ -61,8 +60,10 @@ def decrypt(text, key):
     Returns:
         str: ciphertext
     """
-    if not text.isalpha() or len(text) % 2 is not 0:
-        raise ValueError # TODO
+    text = sub(r'\W+', '', text)
+
+    if len(text) % 2 is not 0:
+        text.append("X")
     
     text = text.upper().replace("J", "I")
     key_grid = build_grid(key)
