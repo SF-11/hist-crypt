@@ -63,7 +63,7 @@ def decrypt(text, key):
     text = sub(r'\W+', '', text)
 
     if len(text) % 2 is not 0:
-        text.append("X")
+        text += "X"
     
     text = text.upper().replace("J", "I")
     key_grid = build_grid(key)
