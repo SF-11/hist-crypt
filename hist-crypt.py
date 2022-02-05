@@ -1,12 +1,12 @@
 import click
 import sys
-from ciphers.adfgvx import decrypt
 
 import ciphers.caesar
 import ciphers.affine
 import ciphers.substitution
 import ciphers.vignere
 import ciphers.adfgvx
+import ciphers.playfair
 
 
 COPRIME_TO_26 = ['1', '3', '5', '7', '9', '11',
@@ -84,6 +84,20 @@ def adfgvx(file, key, alphafile, decrypt):
         click.echo(ciphers.adfgvx.decrypt(file.read(), key, alpha_square).strip())
     else:
         click.echo(ciphers.adfgvx.encrypt(file.read(), key, alpha_square).strip())
+
+
+@cli.command()
+@click.option("-f", "--file",
+              help="name of file containing text or stdin if blank",
+              type=click.File('r'),
+              default=sys.stdin)
+@click.option("-k", "--key", type=click.STRING, required=True)
+@click.option("-d", "--decrypt", default=False, is_flag=True)
+def playfair(file, key, decrypt):
+    if decrypt:
+        click.echo(ciphers.playfair.decrypt(file.read(), key).strip())
+    else:
+        click.echo(ciphers.playfair.encrypt(file.read(), key).strip())
 
 
 if __name__ == "__main__":
