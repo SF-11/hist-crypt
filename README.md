@@ -5,7 +5,7 @@ Currently, the following ciphers are implemented:
 * Caesar
 * Substitution
 * Vignere
-
+* ADFGVX
 
 
 ## Usage
@@ -69,11 +69,24 @@ Options:
 
 ```
 
+### ADFGVX
+```
+Usage: hist-crypt.py adfgvx [OPTIONS]
+
+Options:
+  -f, --file FILENAME       name of file containing text
+  -k, --key TEXT            [required]
+  -a, --alphafile FILENAME  File containing 5x5 or 6x6 ADFGV(X) subsititution
+                            square, comma delimeters  [required]
+  -d, --decrypt
+  --help                    Show this message and exit.
+```
+
 ## Setup Virtual Environment
-pip install virtualenv
-python3 -m venv venv
-source venv/bin/activate (or: venv\Scripts\activate)
-pip install -r requirements.txt
+pip install virtualenv  
+python3 -m venv venv  
+source venv/bin/activate (or: venv\Scripts\activate)  
+pip install -r requirements.txt  
 
 
 ## Run Tests
