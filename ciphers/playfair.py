@@ -10,6 +10,10 @@ def encrypt(text, key):
     Returns:
         str: ciphertext
     """
+    if not text.isalpha():
+        raise ValueError # TODO
+
+    text = text.upper().replace("J", "I")
     key_grid = build_grid(key)
     dim = len(key_grid)
 
@@ -18,7 +22,9 @@ def encrypt(text, key):
     while i <= len(text) - 1:
         # get 2 char pair
         tmp = text[i:i+2]
-        
+        # add X for uneven length
+        if len(tmp) != 2:
+            tmp += "X"
         # split up double letters
         if tmp[0] == tmp[1]:
             tmp = tmp[0] + "X"
@@ -29,14 +35,12 @@ def encrypt(text, key):
 
         # if same row
         if r_1 == r_2:
-            ciphertext += key_grid[r_1][c_1 + 1 % dim]
-            ciphertext += key_grid[r_2][c_2 + 1 % dim]
-
+            ciphertext += key_grid[r_1][(c_1+1) % dim]
+            ciphertext += key_grid[r_2][(c_2+1) % dim]
         # if same col
         elif c_1 == c_2:
-            ciphertext += key_grid[r_1 + 1 % dim][c_1]
-            ciphertext += key_grid[r_2 + 1 % dim][c_2]
-
+            ciphertext += key_grid[(r_1+1) % dim][c_1]
+            ciphertext += key_grid[(r_2+1) % dim][c_2]
         # if square
         else:
             ciphertext += key_grid[r_1][c_2]
@@ -48,8 +52,46 @@ def encrypt(text, key):
 
 
 def decrypt(text, key):
-    # TODO
-    pass
+    """use the Playfair cipher to decrypt the text
+
+    Args:
+        text (str): ciphertext to decrypt, even length, alpha only
+        key (str): keyword to use to derive Playfair table
+
+    Returns:
+        str: ciphertext
+    """
+    if not text.isalpha() or len(text) % 2 is not 0:
+        raise ValueError # TODO
+    
+    text = text.upper().replace("J", "I")
+    key_grid = build_grid(key)
+    dim = len(key_grid)
+
+    plaintext = ""
+    i = 0
+    while i <= len(text) - 1:
+        # get 2 char pair
+        tmp = text[i:i+2]
+        r_1, c_1 = search_2d(key_grid, tmp[0])
+        r_2, c_2 = search_2d(key_grid, tmp[1])
+
+        # if same row
+        if r_1 == r_2:
+            plaintext += key_grid[r_1][(c_1-1) % dim]
+            plaintext += key_grid[r_2][(c_2-1) % dim]
+        # if same col
+        elif c_1 == c_2:
+            plaintext += key_grid[(r_1-1) % dim][c_1]
+            plaintext += key_grid[(r_2-1) % dim][c_2]
+        # if square
+        else:
+            plaintext += key_grid[r_1][c_2]
+            plaintext += key_grid[r_2][c_1]
+
+        i += 2
+
+    return plaintext
 
 
 def build_grid(key):
@@ -61,6 +103,9 @@ def build_grid(key):
     Returns:
         list of list of str: 5x5 playfair key grid
     """
+    if not key.isalpha():
+        raise ValueError # TODO
+    
     key = key.upper().replace("J", "I")
     alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ" # skipped J, I=J for the purposes of this
     key_stream = "".join([key, alphabet])
@@ -94,17 +139,5 @@ def search_2d(arr, target):
             if arr[row][col] == target:
                 return row, col
 
-    return -1, -1
+    raise ValueError # TODO
 
-
-
-
-
-if __name__ == "__main__":
-    
-    grid = build_grid("PLAYFAIREXAMPLE")
-
-    for i in grid:
-        print(i)
-
-    print(encrypt("HIDETHEGOLDINTHETREESTUMP", "PLAYFAIREXAMPLE"))
