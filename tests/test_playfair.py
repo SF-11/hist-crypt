@@ -50,11 +50,8 @@ def test_encrypt():
 
 
 def test_encrypt_non_alpha():
-    try:
-        ciphers.playfair.encrypt("HIDE IN THE GOLD STUMP", "PLAYFAIREXAMPLE")
-        assert False
-    except ValueError:
-        assert True
+    assert ciphers.playfair.encrypt("HIDE THE GOLD IN THE TREE STUMP", "PLAYFAIREXAMPLE") == "BMODZBXDNABEKUDMUIXMMOUVIF"
+
 
 
 def test_encrypt_odd():
@@ -74,19 +71,12 @@ def test_decrypt():
 
 
 def test_decrypt_non_alpha():
-    try:
-        ciphers.playfair.decrypt("! ^ %", "PLAYFAIREXAMPLE")
-        assert False
-    except ValueError:
-        assert True
-
+    assert ciphers.playfair.decrypt("! ^ %", "PLAYFAIREXAMPLE") == ""
+      
 
 def test_decrypt_odd():
-    try:
-        ciphers.playfair.decrypt("BMODZBXDNABEKUDMUIXMMOUVI", "PLAYFAIREXAMPLE")
-        assert False
-    except ValueError:
-        assert True
+    ciphers.playfair.decrypt("BMODZBXDNABEKUDMUIXMMOUVI", "PLAYFAIREXAMPLE") == "HIDETHEGOLDINTHETREXESTUME"
+
 
 
 def test_decrypt_i_j():

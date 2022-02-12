@@ -82,6 +82,30 @@ Options:
   --help                    Show this message and exit.
 ```
 
+### Playfair
+```
+Usage: hist-crypt.py playfair [OPTIONS]
+
+Options:
+  -f, --file FILENAME  name of file containing text or stdin if blank
+  -k, --key TEXT       [required]
+  -d, --decrypt
+  --help               Show this message and exit.
+```
+
+### Bacon
+```
+Usage: hist-crypt.py bacon [OPTIONS]
+
+Options:
+  -f, --file FILENAME  name of file containing text or stdin if blank
+  --hide TEXT          Message to hide in the text  [required]
+  -d, --decrypt
+  --help               Show this message and exit.
+```
+
+
+
 ## Setup Virtual Environment
 pip install virtualenv  
 python3 -m venv venv  
