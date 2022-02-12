@@ -60,6 +60,9 @@ LOOKUP_UNIQUE = {
 
 def encrypt(message, text="", unique=False):
     """not really encrypting... more like encoding"""
+    if not message.isalpha():
+        raise ValueError("Message must only contain letters")
+    
     if text != "" and len(text) < 5 * len(message):
         raise ValueError("Text must be at least 5 times the length of the message to hide")
 
@@ -115,10 +118,5 @@ def decrypt(text, unique=False):
             break
 
     return msg
-
     
-if __name__ == "__main__":
-    print(encrypt("steganography", "To encode a message each letter of the plaintext is replaced by a group of five of the letters 'A' or 'B'."))
-    print(decrypt("To enCOde A mesSage eACh letter OF the PLaIntEXt Is replaced bY A GrouP OF FiVE of tHE LetTERs 'a' OR 'B'."))
-
     

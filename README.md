@@ -82,6 +82,18 @@ Options:
   --help                    Show this message and exit.
 ```
 
+### Playfair
+```
+
+```
+
+### Bacon
+```
+
+```
+
+
+
 ## Setup Virtual Environment
 pip install virtualenv  
 python3 -m venv venv  
