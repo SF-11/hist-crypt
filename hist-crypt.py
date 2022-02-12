@@ -7,6 +7,7 @@ import ciphers.substitution
 import ciphers.vignere
 import ciphers.adfgvx
 import ciphers.playfair
+import ciphers.bacon
 
 
 COPRIME_TO_26 = ['1', '3', '5', '7', '9', '11',
@@ -98,6 +99,23 @@ def playfair(file, key, decrypt):
         click.echo(ciphers.playfair.decrypt(file.read(), key).strip())
     else:
         click.echo(ciphers.playfair.encrypt(file.read(), key).strip())
+
+
+@cli.command()
+@click.option("-f", "--file",
+              help="name of file containing text or stdin if blank",
+              type=click.File('r'),
+              default=sys.stdin)
+@click.option("--hide", 
+              type=click.STRING, 
+              help="Message to hide in the text", 
+              required=True)
+@click.option("-d", "--decrypt", default=False, is_flag=True)
+def bacon(file, hide, decrypt):
+    if decrypt:
+        click.echo(ciphers.bacon.decrypt(file.read()).strip())
+    else:
+        click.echo(ciphers.bacon.encrypt(hide, file.read()).strip())
 
 
 if __name__ == "__main__":
